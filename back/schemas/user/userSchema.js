@@ -5,13 +5,13 @@ const bcrypt = require('bcrypt');
 var userSchema = new mongoose.Schema({
     email: {type: String, unique: true, required: true},
     password: {type: String, required: true},
-    username: {type: String, required: true , unique: true},
+    username: {type: String ,},
     first_name: {type: String, required: true},
     last_name: {type: String, required: true},
-    telephone: {type: Number, required: true},
-    DofB: {type: Date, required: true},
+    telephone: {type: Number, },
+    DofB: {type: Date, },
     image: String,
-    gender: {type: String, required: true},
+    gender: {type: String,},
     address: {
         country: String,
         city: String,

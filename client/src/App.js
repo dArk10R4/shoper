@@ -14,6 +14,7 @@ import EditPayment from "./pages/my_account/editPayment";
 import Checkout from "./pages/checkout/checkoutPage";
 import PaymentIndent from "./pages/checkout/checkoutPage/PaymentIndent";
 import Login from "./pages/user/Login";
+import Register from "./pages/user/register";
 function App() {
   return (
     <>
@@ -27,6 +28,7 @@ function App() {
       <Routes>
         <Route path="/" element={<h1>Home page </h1>} />
         <Route path="/login" element={<Login />} />
+        <Route path='/register' element={<Register/>} />
         <Route path="myaccount" element={<MyAccount />}>
           <Route path="orders" element={<Orders />} />
           <Route path="order/:id" element={<OrderDetails />} />

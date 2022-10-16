@@ -32,11 +32,13 @@ async function main() {
 }
 var app = express();
 app.use(express.json());
+app.use(cookieParser());
 app.use(
     cors({
-      methods:'post',
+      methods:'POST,GET',
       origin: 'http://localhost:3000',
       credentials: true,
+      allowCredentials: true
     })
   );
 app.use(session({
@@ -50,9 +52,9 @@ app.use(session({
 
     }),
     cookie: {
-        maxAge: 2 * 60 * 60 * 1000,
-        sameSite: true,
-        secure: isproduction,
+        maxAge: 24 * 60 * 60 * 1000,
+       
+        
     }
 }));
 initializePassport(passport, async (username) => {
@@ -72,9 +74,9 @@ if (process.env.STATE === 'production') {
     app.set('trust proxy', 1);
     var isproduction = true
 } else { var isproduction = false; }
-app.use(cookieParser())
+
 app.use(passport.initialize())
-app.use(passport.session());
+app.use(passport.session({sameSite:'none',httpOnly:false}));
 app.use('/public', express.static(path.resolve('public')));
 app.use('/pages',express.static(path.resolve('pages')))
 app.use(express.urlencoded({ extended: true }));

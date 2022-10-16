@@ -6,14 +6,18 @@ import PersonalInfo from "./personalInfo";
 import Adresses from "./adresses";
 import PaymentMethods from "./patmentMethods";
 import { NavLink, Outlet } from "react-router-dom";
+import ProtectedRoute from "../../components/ProtectedRoute";
+
 const { Content, Footer, Header, } = Layout;
+
+
 function MyAccount() {
   const items1 = ['1', '2', '3'].map((key) => ({
     key,
     label: `nav ${key}`,
   }));
   return (
-    <>
+    <ProtectedRoute>
       <Layout style={{ backgroundColor: "#fff" }}>
         <Content
           style={{
@@ -81,7 +85,7 @@ function MyAccount() {
 
 
 
-    </>
+    </ProtectedRoute>
   )
 }
 export default MyAccount

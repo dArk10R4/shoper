@@ -11,7 +11,7 @@ async function initialize(passport,getUser,getUserById) {
             return done(null,user)
         }else{return done(null,false,{message:"Password is incorrect"})}
     }
-    passport.use(new localStrategy({ usernameField: 'username' }, authenticateUser))
+    passport.use(new localStrategy({ usernameField: 'username',passwordField: 'password' }, authenticateUser))
     passport.serializeUser((user, done) => done(null, user.id))
     passport.deserializeUser((id, done) => { return  done(null,getUserById(id)) })
 }

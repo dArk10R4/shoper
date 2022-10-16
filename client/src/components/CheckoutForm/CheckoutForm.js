@@ -8,7 +8,6 @@ import {
 export default function CheckoutForm() {
   const stripe = useStripe();
   const elements = useElements();
-  console.log(elements);
   const [message, setMessage] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -57,7 +56,6 @@ export default function CheckoutForm() {
     const { error } = await stripe.confirmPayment({
       elements,
       confirmParams: {
-        // Make sure to change this to your payment completion page
         return_url: "http://localhost:3000",
       },
     });

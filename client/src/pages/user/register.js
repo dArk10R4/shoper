@@ -1,8 +1,31 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React,{useState} from "react";
+import { Link, useNavigate } from "react-router-dom";
 import "./register.css";
 
-export default function register() {
+export default function Register() {
+  var navigate = useNavigate();
+  var [message,setMesage] = useState('');
+  const handleSubmit = async (e)=>{
+    e.preventDefault();
+    console.log(e)
+    if(e.target[3].value != e.target[4].value){
+      setMesage('password doesn\'t match ');
+      return;
+    }
+    let formData = {
+      first_name : e.target[0].value, last_name : e.target[1].value, password : e.target[3].value, email : e.target[2].value, 
+    }
+    let data  = await fetch('http://localhost:8080/signup',{method:'POST',headers: {
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+    },body:JSON.stringify(formData),credetials: 'include'});
+    if(data.status ==201){
+      navigate('/login')
+    } 
+    else{
+      setMesage('make sure everything is correct, try change email')
+    }
+  }
   return (
     <div className="boss">
       <header className="header">
@@ -19,11 +42,12 @@ export default function register() {
           <Link to="/login">login</Link>
         </li>
       </ul> */}
-        <div className="form">
+          <p style={{color:'red',fontWeight:"500",textAlign:"center"}}>{message}</p>
+        <form className="form" method="post" onSubmit={handleSubmit}>
           <div className="form-body">
             <h1>Register</h1>
             <div className="username">
-              <label className="form__label" for="firstName"></label>
+              <label className="form__label" htmlFor="firstName"></label>
               <input
                 placeholder="       First Name
 "
@@ -33,7 +57,7 @@ export default function register() {
               />
             </div>
             <div className="lastname">
-              <label className="form__label" for="lastName">
+              <label className="form__label" htmlFor="lastName">
                 {" "}
               </label>
               <input
@@ -45,7 +69,7 @@ export default function register() {
               />
             </div>
             <div className="email">
-              <label className="form__label" for="email">
+              <label className="form__label" htmlFor="email">
                 {" "}
               </label>
               <input
@@ -58,7 +82,7 @@ export default function register() {
             <div className="lastinput">
               {" "}
               <div className="password">
-                <label className="form__label" for="password">
+                <label className="form__label" htmlFor="password">
                   {" "}
                 </label>
                 <input
@@ -69,10 +93,10 @@ export default function register() {
                 />
               </div>
               <div className="confirm-password">
-                <label className="form__label" for="confirmPassword"></label>
+                <label className="form__label" htmlFor="confirmPassword"></label>
                 <input
                   Confirm
-                  Password
+                  password
                   placeholder="       Confirm password*"
                   className="form__input"
                   type="password"
@@ -81,7 +105,7 @@ export default function register() {
               </div>
             </div>
 
-            <button type="submit" class="btn">
+            <button type="submit" className="btn">
               Register
             </button>
             <div className="footer">
@@ -89,8 +113,8 @@ export default function register() {
               Already have an account?<Link to="/login"> Sign in now</Link>
             </div>
           </div>
-        </div>
-      </div>
+      </form>
     </div>
+    </div >
   );
 }

@@ -8,17 +8,13 @@ const chHead = async function (req, res, next) {
 
 const registerUser = async function (req, res) {
 
-  const { first_name, last_name, password, email, telephone, DofB, gender, username } = req.body;
+  const { first_name, last_name, password, email } = req.body;
 
   const user = new User({
     first_name,
     last_name,
-    username,
     password,
     email,
-    telephone,
-    DofB,
-    gender
   });
   if (req.file) {
     const { path } = req.file;
@@ -27,12 +23,22 @@ const registerUser = async function (req, res) {
 
   try {
     await user.save(function (e) {
+      if (e.name === "ValidationError") {
+        let errors = {};
+  
+        Object.keys(e.errors).forEach((key) => {
+          errors[key] = e.errors[key].message;
+        });
+        return res.status(400).send(errors);
+      }
+
+
       if (e) {
         console.log(e)
-        res.redirect('/signup');
+        res.status(504).send('something get bad');
         return;
       }
-      res.redirect('/signin');
+      res.status(201).send();
     });
   }
   catch (e) {
@@ -46,6 +52,7 @@ const logOut = function (req, res) {
   });
 }
 const passportLogin = function(req, res, next) {
+  console.log(req.body)
   passport.authenticate('local', function(err, user, info) {
       if (err) { return next(err); } //error exception
 
@@ -55,13 +62,25 @@ const passportLogin = function(req, res, next) {
       } else {
           // if user authenticated maintain the session
           req.logIn(user, function() {
-              res.redirect('/');
+              data = {
+                username: user.username,
+                email: user.email,
+                fulname: user.first_name +user.last_name
+              }
+              console.log(req.session)
+              res.send(data);
               // do whatever here on successful login
           })
       }    
   })(req, res, next);
 }
+const me = (req,res)=>{
+  console.log(req.session);
+  console.log(req.cookie)
+  res.status(200).send();
+}
 module.exports = {
+  me,
   passportLogin,
   logOut,
   registerUser,

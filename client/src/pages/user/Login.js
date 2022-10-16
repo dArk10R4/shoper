@@ -1,11 +1,38 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "./login.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate, } from "react-router-dom";
+import axios from 'axios';
 export default function Login() {
-  async function handleSubmit(e) {
+  var [message, setMesage] = useState('');
+  let navigate = useNavigate();
+  async function HandleSubmit(e) {
     e.preventDefault();
-    console.log(e.currentTarget.elements);
-    await fetch();
+    await axios.get('http://localhost:8080/me',{}, {
+      withCredentials: true,
+      headers: { "Access-Control-Allow-Origin": "localhost:3000", withCredentials:true }
+    })
+    let postData = { username: e.target[1].value, password: e.target[3].value };
+    try {
+      let data = await axios.post('http://localhost:8080/signin', postData, {
+        withCredentials: true,
+        headers: { "Access-Control-Allow-Origin": "localhost:3000",withCredentials:true, 'Access-Control-Allow-Credentials': true,'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept' }
+      }).then(r => r);
+      console.log(data)
+      navigate('/')
+    } catch(error){
+      const errorMessage = error.response.data.message;
+      setMesage(errorMessage);
+    }
+    
+    // let data  = await fetch('http://localhost:8080/signin',{method:'POST',headers: {
+    //   "Content-Type": "application/json",
+    //   "Access-Control-Allow-Origin": "*",
+    // },body:JSON.stringify({
+    //   'username': e.target[1].value,
+    //   'password': e.target[3].value,
+
+    // }),credetials: 'include'});
+    
   }
   return (
     <div className="Auth-form-container">
@@ -25,7 +52,8 @@ export default function Login() {
       </div>
       <div className="login_side">
         <div className="login-container">
-          <form method="post" onSubmit={handleSubmit}>
+          <form method="post" onSubmit={HandleSubmit}>
+            <p style={{ color: "red", fontWeight: 500, textAlign: 'center' }}>{message}</p>
             <div className="input-container">
               <h1>Sign In</h1>
               <fieldset className="mail">
